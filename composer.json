@@ -19,11 +19,20 @@
     },
     "require": {
         "php": ">=5.2.8",
-        "ext-mcrypt": "*"
+        "ext-mcrypt": "*",
+
+        "slywalker/boost_cake": "*",
+	"twitter/bootstrap": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
         "cakephp/debug_kit" : "2.2.*"
+    },
+    "extra": {
+	"installer-paths": {
+	    "app/Plugin/DebugKit": ["cakephp/debug_kit"],
+	    "app/Plugin/BoostCake": ["slywalker/boost_cake"]
+	}
     },
     "bin": [
         "lib/Cake/Console/cake"
