@@ -23,34 +23,26 @@ class User extends AppModel {
 		'username' => array(
 			'alphaNumeric' => array(
 				'rule' => array('alphaNumeric'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+				'message' => 'Usernames can only contain letters and numbers.',
 			),
 			'between' => array(
-				'rule' => array('between'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+				'rule' => array('between', 4, 20),
+                'message' => 'Usernames must be between 4 and 20 characters.',
 			),
 		),
 		'password' => array(
 			'minLength' => array(
-				'rule' => array('minLength'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+				'rule' => array('minLength', 6),
+				'message' => 'Passwords must be 6 characters or longer.',
 			),
 		),
+        'role' => array(
+            'valid' => array(
+                'rule' => array('inList', array('admin', 'normal')),
+                'allowEmpty' => false
+            )
+        ),
 	);
-
-	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
 /**
  * hasAndBelongsToMany associations
