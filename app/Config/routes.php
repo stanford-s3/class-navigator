@@ -31,6 +31,12 @@
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
 
 /**
+ * Set up routes for funnily-named KlassesController
+ */
+    Router::connect('/classes', array('controller' => 'klasses'));
+    Router::connect('/classes/:action/*', array('controller' => 'klasses'));
+
+/**
  * Load all plugin routes. See the CakePlugin documentation on
  * how to customize the loading of plugin routes.
  */

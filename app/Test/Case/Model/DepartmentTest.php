@@ -14,7 +14,11 @@ class DepartmentTest extends CakeTestCase {
  */
 	public $fixtures = array(
 		'app.department',
-		'app.klass_code'
+		'app.klass_code',
+		'app.klass',
+		'app.grading_style',
+		'app.user',
+		'app.users_klass'
 	);
 
 /**

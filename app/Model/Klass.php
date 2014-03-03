@@ -1,11 +1,14 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('Department', 'Model');
 /**
  * Klass Model
  *
  * @property User $User
  */
 class Klass extends AppModel {
+
+    public $uses = array('Department');
 
 /**
  * Display field
@@ -15,12 +18,12 @@ class Klass extends AppModel {
 	public $displayField = 'name';
 
 
-/**
- * hasOne associations
- *
- * @var array
- */
-    public $hasOne = 'GradingStyle';
+    public $virtualFields = array(
+        'units' => 'IF(units_max IS NULL, units_min, CONCAT(units_min, "–", units_max))'
+    );
+
+
+    public $belongsTo = 'GradingStyle';
 
 
 /**
@@ -55,5 +58,25 @@ class Klass extends AppModel {
 			'finderQuery' => '',
 		)
 	);
+
+    private $Department;
+
+    /**
+     * Returns an array of class codes which describe this class.
+     *
+     * @return array
+     */
+    public function getCodeNames($codes) {
+        if (!isset($this->Department))
+            $this->Department = new Department();
+
+        $ret = array();
+        foreach ($codes as $code) {
+            $department = $this->Department->find('first', array('conditions' => array('Department.id' => $code['department_id'])));
+            $ret[] = $department['Department']['code'] . ' ' . $code['klass_code'];
+        }
+
+        return $ret;
+    }
 
 }
