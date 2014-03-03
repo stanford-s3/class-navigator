@@ -1,29 +1,9 @@
-<?php
-/**
- *
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       app.View.Layouts
- * @since         CakePHP(tm) v 0.10.0.1076
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- */
-
-$cakeDescription = __d('home_title', 'Class Navigator');
-?>
 <!DOCTYPE html>
 <html>
 <head>
     <?php echo $this->Html->charset(); ?>
     <title>
-        <?php echo $cakeDescription ?>:
+        <?php echo __('Class Navigator'); ?>:
         <?php echo $title_for_layout; ?>
     </title>
     <?php
@@ -42,12 +22,20 @@ $cakeDescription = __d('home_title', 'Class Navigator');
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
-                <?php echo $this->Html->link($cakeDescription, array('action' => 'index'), array('class' => 'navbar-brand')); ?>
+                <?php echo $this->Html->link(__('Class Navigator'), array('action' => 'index'), array('class' => 'navbar-brand')); ?>
             </div>
 
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav">
-                    <li><?php echo $this->Html->link('Classes', array('controller' => 'classes', 'action' => 'index')); ?></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Classes <strong class="caret"></strong></a>
+                        <ul class="dropdown-menu">
+                            <li><?php echo $this->Html->link('Explore classes', array('controller' => 'classes', 'action' => 'index')); ?></li>
+                            <?php if (AuthComponent::user('id')): ?>
+                                <li><?php echo $this->Html->link('My classes', array('controller' => 'classes', 'action' => 'my')); ?></li>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>

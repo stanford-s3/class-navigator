@@ -8,6 +8,15 @@ App::uses('AppController', 'Controller');
  */
 class UsersController extends AppController {
 
+    public $helpers = array(
+        'Html' => array('className' => 'BoostCake.BoostCakeHtml'),
+    );
+
+    public function beforeFilter() {
+        parent::beforeFilter();
+        $this->Auth->allow('add', 'logout');
+    }
+
 /**
  * index method
  *
@@ -17,6 +26,17 @@ class UsersController extends AppController {
 		$this->User->recursive = 0;
 		$this->set('users', $this->Paginator->paginate());
 	}
+
+    public function login() {
+        if ($this->request->is('post') && $this->Auth->login())
+            return $this->redirect($this->Auth->redirect());
+
+        $this->Session->setFlash(__('Invalid username or password. Try again.'));
+    }
+
+    public function logout() {
+        return $this->redirect($this->Auth->logout());
+    }
 
 /**
  * view method
@@ -48,8 +68,6 @@ class UsersController extends AppController {
 				$this->Session->setFlash(__('The user could not be saved. Please, try again.'));
 			}
 		}
-		$klasses = $this->User->Klass->find('list');
-		$this->set(compact('klasses'));
 	}
 
 /**

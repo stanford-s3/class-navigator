@@ -33,9 +33,30 @@ App::uses('Controller', 'Controller');
 class AppController extends Controller {
     public $uses = array('BoostCake.BoostCake');
 
-    public $components = array('DebugKit.Toolbar');
+    public $components = array(
+        'DebugKit.Toolbar',
+        'Session',
+
+        'Auth' => array(
+            'loginRedirect' => array(
+                'controller' => 'pages',
+                'action' => 'display',
+                'home'
+            ),
+            'logoutRedirect' => array(
+                'controller' => 'pages',
+                'action' => 'display',
+                'home'
+            )
+        ),
+    );
 
     public $helpers = array(
         'Html' => array('className' => 'BoostCake.BoostCakeHtml'),
+        'Form' => array('className' => 'BoostCake.BoostCakeForm'),
     );
+
+    public function beforeFilter() {
+        $this->Auth->allow('index', 'view');
+    }
 }
