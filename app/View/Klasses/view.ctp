@@ -5,6 +5,23 @@
 </h2>
 <div class="row">
     <div class="well col-md-4">
+        <?php if ($loggedIn): ?>
+            <div class="row row-btns">
+                <div class="col-md-12">
+                    <?php
+                        if ($enrolled) {
+                            echo $this->Html->link(__("Drop this class"),
+                                array('action' => 'remove_self', $klass['Klass']['id']),
+                                array('class' => 'btn btn-danger btn-block block-center'));
+                        } else {
+                            echo $this->Html->link(__("I'm in this class!"),
+                                array('action' => 'add_self', $klass['Klass']['id']),
+                                array('class' => 'btn btn-primary btn-block block-center'));
+                        }
+                    ?>
+                </div>
+            </div>
+        <?php endif; ?>
         <div class="row">
             <div class="col-md-6"><strong><?php echo __('Units'); ?></strong></div>
             <div class="col-md-6"><?php echo h($klass['Klass']['units']); ?></div>

@@ -8,6 +8,8 @@ App::uses('AppController', 'Controller');
  */
 class KlassesController extends AppController {
 
+    public $uses = array('Klass', 'User');
+
 /**
  * Components
  *
@@ -42,6 +44,11 @@ class KlassesController extends AppController {
 
 		$this->set('klass', $klass);
         $this->set('code_names', $this->Klass->getCodeNames($klass['KlassCode']));
+
+        if ($this->Auth->loggedIn()) {
+            $this->User->id = $this->Auth->user('id');
+            $this->set('enrolled', $this->User->hasClass($id));
+        }
 	}
 
 /**
@@ -109,6 +116,38 @@ class KlassesController extends AppController {
 		}
 		return $this->redirect(array('action' => 'index'));
 	}
+
+/**
+ * Add the current user to the given class
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+    public function add_self($id = null) {
+        $this->Klass->id = $id;
+        if (!$this->Klass->exists())
+            throw new NotFoundException(__('Invalid class'));
+
+        $this->Klass->addUser($id, $this->Auth->user('id'));
+        return $this->redirect(array('action' => 'view', $id));
+    }
+
+/**
+ * Remove the current user from the given class
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+    public function remove_self($id = null) {
+        $this->Klass->id = $id;
+        if (!$this->Klass->exists())
+            throw new NotFoundException(__('Invalid class'));
+
+        $this->Klass->removeUser($id, $this->Auth->user('id'));
+        return $this->redirect(array('action' => 'view', $id));
+    }
 
 /**
  * admin_index method

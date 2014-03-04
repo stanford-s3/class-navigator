@@ -76,4 +76,11 @@ class User extends AppModel {
         return true;
     }
 
+    public function hasClass($class_id) {
+        return $this->UsersKlass->hasAny(array(
+                'UsersKlass.user_id' => $this->id,
+                'UsersKlass.klass_id' => $class_id
+        ));
+    }
+
 }

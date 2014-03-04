@@ -82,4 +82,17 @@ class Klass extends AppModel {
         return $ret;
     }
 
+    public function addUser($kid, $uid) {
+        $this->data['Klass']['id'] = $kid;
+        $this->data['User']['id'] = $uid;
+        $this->save($this->data);
+    }
+
+    public function removeUser($kid, $uid) {
+        $this->UsersKlass->deleteAll(array(
+            'UsersKlass.klass_id' => $kid,
+            'UsersKlass.user_id' => $uid
+        ), false);
+    }
+
 }
