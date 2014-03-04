@@ -10,6 +10,9 @@ class Klass extends AppModel {
 
     public $uses = array('Department');
 
+    public $name = 'Class';
+    public $useTable = 'klasses';
+
 /**
  * Display field
  *
