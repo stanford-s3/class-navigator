@@ -92,10 +92,12 @@ class Klass extends AppModel {
         ));
     }
 
-    public function removeUser($kid, $uid) {
+    public function removeUser($kid, $uid, $year, $quarter) {
         $this->UsersKlass->deleteAll(array(
             'UsersKlass.klass_id' => $kid,
-            'UsersKlass.user_id' => $uid
+            'UsersKlass.user_id' => $uid,
+            'UsersKlass.year' => $year,
+            'UsersKlass.quarter' => $quarter
         ), false);
     }
 

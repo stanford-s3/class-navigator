@@ -189,7 +189,10 @@ class KlassesController extends AppController {
         if (!$this->Klass->exists())
             throw new NotFoundException(__('Invalid class'));
 
-        $this->Klass->removeUser($id, $this->Auth->user('id'));
+        $year = $this->Stanford->getCurrentAcademicYear();
+        $quarter = $this->Stanford->getCurrentQuarter($year);
+
+        $this->Klass->removeUser($id, $this->Auth->user('id'), $year, $quarter);
         return $this->redirect(array('action' => 'view', $id));
     }
 
