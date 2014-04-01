@@ -61,8 +61,20 @@
 <div class="well row">
     <div class="col-md-7">
         <h3>Current students</h3>
+
+        <ul>
+            <?php foreach ($students_current as $student): ?>
+                <li><?php echo h($student['User']['username'] . ' (' . $student['quarter_label'] . ')'); ?></li>
+            <?php endforeach; ?>
+        </ul>
     </div>
     <div class="col-md-5">
         <h3>Past students</h3>
+
+        <ul>
+            <?php foreach ($students_past as $student): ?>
+                <li><?php echo h($student['User']['username'] . ' (' . $student['quarter_label'] . ')'); ?></li>
+            <?php endforeach; ?>
+        </ul>
     </div>
 </div>

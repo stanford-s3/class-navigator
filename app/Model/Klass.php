@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::uses('Department', 'Model');
+
 /**
  * Klass Model
  *
@@ -95,4 +96,68 @@ class Klass extends AppModel {
         ), false);
     }
 
+    /**
+     * @param $kid
+     * @param $year Academic year
+     * @param $quarter Quarter ID (see StanfordComponent constants, e.g.,
+     *   CLASS_QUARTER_AUTUMN)
+     */
+    public function getUsers($kid, $year = null, $quarter = null) {
+        $conditions = array(
+            'UsersKlass.klass_id' => $kid,
+            'UsersKlass.user_id = User.id'
+        );
+
+        if (!empty($year))
+            $conditions['UsersKlass.year'] = $year;
+        if (!empty($quarter))
+            $conditions['UsersKlass.quarter'] = $quarter;
+
+        return $this->User->find('all', array(
+            'joins' => array(
+                array(
+                    'table' => 'users_klasses',
+                    'alias' => 'UsersKlass',
+                    'type' => 'INNER',
+                    'conditions' => $conditions
+                )
+            )
+        ));
+    }
+
+    /**
+     * Get users associated with the class who were not enrolled in the given
+     * academic year and quarter.
+     *
+     * @param $kid
+     * @param $not_year Academic year
+     * @param $not_quarter Quarter ID (see StanfordComponent constants, e.g.,
+     *   CLASS_QUARTER_AUTUMN)
+     */
+    public function getUsersOtherRun($kid, $not_year, $not_quarter) {
+        $this->User->recursive = 0;
+        return $this->User->find('all', array(
+            'fields' => array('User.*', 'UsersKlass.year', 'UsersKlass.quarter'),
+            'joins' => array(
+                array(
+                    'table' => 'users_klasses',
+                    'alias' => 'UsersKlass',
+                    'fields' => array('UsersKlass.year', 'UsersKlass.quarter'),
+                    'type' => 'INNER',
+                    'conditions' => array(
+                        'UsersKlass.klass_id' => $kid,
+                        'UsersKlass.user_id = User.id',
+                        'OR' => array(
+                            'AND' => array(
+                                'UsersKlass.year' => $not_year,
+                                'UsersKlass.quarter !=' => $not_quarter
+                            ),
+
+                            'UsersKlass.year !=' => $not_year
+                        )
+                    )
+                )
+            )
+        ));
+    }
 }

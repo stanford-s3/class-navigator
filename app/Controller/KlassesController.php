@@ -15,7 +15,7 @@ class KlassesController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator');
+	public $components = array('Paginator', 'Stanford');
 
 /**
  * index method
@@ -49,6 +49,29 @@ class KlassesController extends AppController {
             $this->User->id = $this->Auth->user('id');
             $this->set('enrolled', $this->User->hasClass($id));
         }
+
+        $current_year = $this->Stanford->getCurrentAcademicYear();
+        $current_quarter = $this->Stanford->getCurrentQuarter($current_year);
+
+        $current_students = $this->Klass->getUsers(
+            $klass['Klass']['id'], $current_year, $current_quarter);
+        $past_students = $this->Klass->getUsersOtherRun(
+            $klass['Klass']['id'], $current_year, $current_quarter);
+
+        // Annotate instances with quarter labels
+        foreach ($current_students as &$student) {
+            $student['quarter_label'] = $this->Stanford->getQuarterLabel(
+                $student['UsersKlass']['year'],
+                $student['UsersKlass']['quarter']);
+        }
+        foreach ($past_students as &$student) {
+            $student['quarter_label'] = $this->Stanford->getQuarterLabel(
+                $student['UsersKlass']['year'],
+                $student['UsersKlass']['quarter']);
+        }
+
+        $this->set('students_current', $current_students);
+        $this->set('students_past', $past_students);
 	}
 
 /**
