@@ -76,10 +76,23 @@ class User extends AppModel {
         return true;
     }
 
-    public function hasClass($class_id) {
+    public function hasClass($uid, $class_id) {
         return $this->UsersKlass->hasAny(array(
-                'UsersKlass.user_id' => $this->id,
-                'UsersKlass.klass_id' => $class_id
+            'UsersKlass.user_id' => $uid,
+            'UsersKlass.klass_id' => $class_id
+        ));
+    }
+
+    /**
+     * Get the instances in which the user was enrolled in the given class.
+     */
+    public function getEnrollments($uid, $kid) {
+        return $this->UsersKlass->find('all', array(
+            'fields' => array('UsersKlass.year', 'UsersKlass.quarter'),
+            'conditions' => array(
+                'UsersKlass.user_id' => $uid,
+                'UsersKlass.klass_id' => $kid
+            )
         ));
     }
 

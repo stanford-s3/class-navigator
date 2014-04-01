@@ -6,10 +6,15 @@
 <div class="row">
     <div class="well col-md-4">
         <?php if ($loggedIn): ?>
+            <?php foreach ($past_enrollments as $past_enrollment): ?>
+                <div class="row text-center">
+                    <?php echo __('You took this class in <strong>%s</strong>.', $past_enrollment); ?>
+                </div>
+            <?php endforeach; ?>
             <div class="row row-btns">
                 <div class="col-md-12">
                     <?php
-                        if ($enrolled) {
+                        if ($enrolled_this_quarter) {
                             echo $this->Html->link(__("Drop this class"),
                                 array('action' => 'remove_self', $klass['Klass']['id']),
                                 array('class' => 'btn btn-danger btn-block block-center'));

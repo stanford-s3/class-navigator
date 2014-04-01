@@ -83,10 +83,13 @@ class Klass extends AppModel {
         return $ret;
     }
 
-    public function addUser($kid, $uid) {
-        $this->data['Klass']['id'] = $kid;
-        $this->data['User']['id'] = $uid;
-        $this->save($this->data);
+    public function addUser($kid, $uid, $year, $quarter) {
+        $this->User->UsersKlass->save(array(
+            'klass_id' => $kid,
+            'user_id' => $uid,
+            'year' => $year,
+            'quarter' => $quarter
+        ));
     }
 
     public function removeUser($kid, $uid) {
@@ -113,7 +116,9 @@ class Klass extends AppModel {
         if (!empty($quarter))
             $conditions['UsersKlass.quarter'] = $quarter;
 
+        $this->User->recursive = 0;
         return $this->User->find('all', array(
+            'fields' => array('User.*', 'UsersKlass.year', 'UsersKlass.quarter'),
             'joins' => array(
                 array(
                     'table' => 'users_klasses',
@@ -142,7 +147,6 @@ class Klass extends AppModel {
                 array(
                     'table' => 'users_klasses',
                     'alias' => 'UsersKlass',
-                    'fields' => array('UsersKlass.year', 'UsersKlass.quarter'),
                     'type' => 'INNER',
                     'conditions' => array(
                         'UsersKlass.klass_id' => $kid,

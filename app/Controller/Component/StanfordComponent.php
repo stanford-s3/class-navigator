@@ -70,7 +70,7 @@ class StanfordComponent extends Component {
         $quarter_name = $this->quarter_names[$quarter];
 
         // Winter quarter overlaps two calendar years
-        if ($quarter == 2)
+        if ($quarter == 1)
             $year_name = $year . '–' . ($year + 1);
         else
             $year_name = $year;

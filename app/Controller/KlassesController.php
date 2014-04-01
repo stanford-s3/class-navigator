@@ -45,13 +45,31 @@ class KlassesController extends AppController {
 		$this->set('klass', $klass);
         $this->set('code_names', $this->Klass->getCodeNames($klass['KlassCode']));
 
-        if ($this->Auth->loggedIn()) {
-            $this->User->id = $this->Auth->user('id');
-            $this->set('enrolled', $this->User->hasClass($id));
-        }
-
         $current_year = $this->Stanford->getCurrentAcademicYear();
         $current_quarter = $this->Stanford->getCurrentQuarter($current_year);
+
+        if ($this->Auth->loggedIn()) {
+            $uid = $this->Auth->user('id');
+
+            $enrollments = $this->User->getEnrollments($uid, $id);
+            $past_enrollments = array();
+            $enrolled_this_quarter = false;
+
+            foreach ($enrollments as $enrollment) {
+                $en = $enrollment['UsersKlass'];
+                if ($en['year'] != $current_year
+                    || ($en['year'] == $current_year
+                        && $en['quarter'] != $current_quarter)) {
+                    $past_enrollments[] = $this->Stanford->getQuarterLabel(
+                        $en['year'], $en['quarter']);
+                } else {
+                    $enrolled_this_quarter = true;
+                }
+            }
+
+            $this->set('past_enrollments', $past_enrollments);
+            $this->set('enrolled_this_quarter', $enrolled_this_quarter);
+        }
 
         $current_students = $this->Klass->getUsers(
             $klass['Klass']['id'], $current_year, $current_quarter);
@@ -152,7 +170,10 @@ class KlassesController extends AppController {
         if (!$this->Klass->exists())
             throw new NotFoundException(__('Invalid class'));
 
-        $this->Klass->addUser($id, $this->Auth->user('id'));
+        $year = $this->Stanford->getCurrentAcademicYear();
+        $quarter = $this->Stanford->getCurrentQuarter($year);
+
+        $this->Klass->addUser($id, $this->Auth->user('id'), $year, $quarter);
         return $this->redirect(array('action' => 'view', $id));
     }
 
