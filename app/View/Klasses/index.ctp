@@ -39,15 +39,3 @@
 	));
 	?>	</p>-->
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('New Klass'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List Grading Styles'), array('controller' => 'grading_styles', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Grading Style'), array('controller' => 'grading_styles', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Klass Codes'), array('controller' => 'klass_codes', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Klass Code'), array('controller' => 'klass_codes', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Users'), array('controller' => 'users', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New User'), array('controller' => 'users', 'action' => 'add')); ?> </li>
-	</ul>
-</div>
