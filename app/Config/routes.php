@@ -37,6 +37,12 @@
     Router::connect('/classes/:action/*', array('controller' => 'klasses'));
 
 /**
+ * Parse extensions: automatically switch view classes when we see this
+ * extension
+ */
+    Router::parseExtensions('json');
+
+/**
  * Load all plugin routes. See the CakePlugin documentation on
  * how to customize the loading of plugin routes.
  */

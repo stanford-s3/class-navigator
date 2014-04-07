@@ -15,7 +15,7 @@ class KlassesController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator', 'Stanford');
+	public $components = array('Paginator', 'RequestHandler', 'Stanford');
 
 /**
  * index method
@@ -157,6 +157,22 @@ class KlassesController extends AppController {
 		}
 		return $this->redirect(array('action' => 'index'));
 	}
+
+/**
+ * Search classes by code name. (backend for autocomplete)
+ *
+ * @param string $term
+ */
+    public function search($code) {
+        $this->Klass->recursive = 0;
+        $this->set(
+            'results',
+            Set::extract(
+                '/Klass/.',
+                $this->Klass->searchByCode($code, array('Klass.id', 'Klass.name'))
+            )
+        );
+    }
 
 /**
  * Add the current user to the given class

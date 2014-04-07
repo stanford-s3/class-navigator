@@ -91,8 +91,8 @@ class Klass extends AppModel {
      * @param string $code_query
      * @return array
      */
-    public function searchByCode($code_query) {
-        return $this->find('all', array(
+    public function searchByCode($code_query, $fields = null) {
+        $options = array(
             'joins' => array(
                 array(
                     'table' => 'klass_codes_index',
@@ -106,7 +106,12 @@ class Klass extends AppModel {
             'conditions' => array(
                 'KlassCodesIndex.class_code LIKE' => $code_query . '%'
             )
-        ));
+        );
+
+        if (!empty($fields))
+            $options['fields'] = $fields;
+
+        return $this->find('all', $options);
     }
 
     public function addUser($kid, $uid, $year, $quarter) {
