@@ -38,9 +38,11 @@ class Klass extends AppModel {
     public $hasMany = array(
         'KlassCode' => array(
             'className' => 'KlassCode',
-        )
+        ),
+        'KlassCodesIndex' => array(
+            'className' => 'KlassCodesIndex'
+        ),
     );
-
 
 /**
  * hasAndBelongsToMany associations
@@ -81,6 +83,30 @@ class Klass extends AppModel {
         }
 
         return $ret;
+    }
+
+    /**
+     * Returns an array of Klasses which match the given code lookup.
+     *
+     * @param string $code_query
+     * @return array
+     */
+    public function searchByCode($code_query) {
+        return $this->find('all', array(
+            'joins' => array(
+                array(
+                    'table' => 'klass_codes_index',
+                    'alias' => 'KlassCodesIndex',
+                    'type' => 'INNER',
+                    'conditions' => array(
+                        'Klass.id = KlassCodesIndex.klass_id'
+                    )
+                )
+            ),
+            'conditions' => array(
+                'KlassCodesIndex.class_code LIKE' => $code_query . '%'
+            )
+        ));
     }
 
     public function addUser($kid, $uid, $year, $quarter) {
