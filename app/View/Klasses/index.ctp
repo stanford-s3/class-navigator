@@ -15,7 +15,7 @@
 	<?php foreach ($klasses as $klass): ?>
 	<tr>
 		<td><?php echo h($klass['Klass']['name']); ?>&nbsp;</td>
-		<td><?php echo h($klass['Klass']['description']); ?>&nbsp;</td>
+		<td><?php echo $klass['Klass']['description']; ?>&nbsp;</td>
 		<td><?php echo h($klass['Klass']['units']); ?>&nbsp;</td>
 		<td><?php echo h($klass['Klass']['repeatable_for_credit'] ? __('Yes') : __('No')); ?>&nbsp;</td>
 		<td>
