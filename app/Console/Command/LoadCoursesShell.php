@@ -6,17 +6,13 @@ define('EXPLORECOURSES_DEPARTMENT_URL', 'http://explorecourses.stanford.edu/sear
 App::Import('ConnectionManager');
 
 class LoadCoursesShell extends AppShell {
-    public $uses = array('Department', 'Klass', 'KlassCode');
+    public $uses = array('Department', 'Klass', 'GradingStyle');
 
     public $grading_styles = array(
         'Letter (ABCD/NP)' => 1,
         'Letter or Credit/No Credit' => 2,
         'Satisfactory/No Credit' => 3,
-        'GSB Pass/Fail' => 4,
-        'GSB Letter Graded' => 5,
-        'GSB Student Option LTR/PF' => 6,
         'Credit/No Credit' => 7,
-        'TGR' => 8,
     );
 
     public function main() {
@@ -30,7 +26,7 @@ class LoadCoursesShell extends AppShell {
     }
 
     private function load_departments() {
-        $school_data = simplexml_load_file(EXPLORECOURSES_SCHOOL_URL);
+        $school_data = $this->get(EXPLORECOURSES_SCHOOL_URL);
 
         $departments = [];
         $department_codes = [];
@@ -62,25 +58,51 @@ class LoadCoursesShell extends AppShell {
         do {
             $class_page_url = sprintf(EXPLORECOURSES_DEPARTMENT_URL, $page,
                 $department_code);
-            $class_page = simplexml_load_file($class_page_url);
+            $class_page = $this->get($class_page_url);
 
             foreach ($class_page->courses->course as $class_el) {
-                $classes[] = array(
+                $data = array(
                     'department_id' => $department_id,
                     'code' => (integer) $class_el->code,
                     'name' => (string) $class_el->title,
                     'description' => (string) $class_el->description,
                     'units_min' => (integer) $class_el->unitsMin,
-                    'units_max' => (integer) $class_el->unitsMax,
                     'repeatable_for_credit' => (boolean) $class_el->repeatable,
-                    'grading_style_id' => $this->grading_styles[(string) $class_el->grading],
+                    'grading_style_id' => $this->get_grading_style_id((string) $class_el->grading),
                 );
+
+                if ((integer) $class_el->unitsMax > (integer) $class_el->unitsMin)
+                    $data['units_max'] = (integer) $class_el->unitsMax;
+
+                $classes[] = $data;
             }
 
             $page++;
         } while ($class_page->courses->course->count() > 0);
 
         return $classes;
+    }
+
+    private function get_grading_style_id($style) {
+        if (!array_key_exists($style, $this->grading_styles)) {
+            $grading_style = array('description' => $style);
+            $this->GradingStyle->create($grading_style);
+            $this->GradingStyle->save();
+            $this->grading_styles[$style] = $this->GradingStyle->getLastInsertId();
+        }
+
+        return $this->grading_styles[$style];
+    }
+
+    private function get($url) {
+        $result = simplexml_load_file($url);
+        while (empty($result)) {
+            echo "\tRetry\n";
+            $result = simplexml_load_file($url);
+            sleep(2);
+        }
+
+        return $result;
     }
 
     /* private function group_classes($classes) { */
