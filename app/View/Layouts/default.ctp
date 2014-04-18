@@ -37,6 +37,12 @@
                         </ul>
                     </li>
                 </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                  <li><?php if (AuthComponent::user('id'))
+                            echo $this->Html->link('Log out', array('controller' => 'users', 'action' => 'logout'));
+                    else echo $this->Html->link('Log in', array('controller' => 'users', 'action' => 'login')); ?></li>
+                </ul>
             </div>
         </div>
     </div>
