@@ -43,7 +43,7 @@ class KlassesController extends AppController {
         $klass = $this->Klass->find('first', $options);
 
 		$this->set('klass', $klass);
-        $this->set('code_names', $this->Klass->getCodeNames($klass['KlassCode']));
+        $this->set('code_name', $this->Klass->getCodeName($klass['Klass']));
 
         $current_year = $this->Stanford->getCurrentAcademicYear();
         $current_quarter = $this->Stanford->getCurrentQuarter($current_year);
@@ -165,12 +165,13 @@ class KlassesController extends AppController {
  */
     public function search($code) {
         $this->Klass->recursive = 0;
+        $results = $this->Klass->searchByCode($code, array(
+            'Klass.id', 'Klass.department_id', 'Klass.code', 'Klass.name')
+        );
+
         $this->set(
             'results',
-            Set::extract(
-                '/Klass/.',
-                $this->Klass->searchByCode($code, array('Klass.id', 'Klass.name'))
-            )
+            Set::extract('/Klass/.', $results)
         );
     }
 

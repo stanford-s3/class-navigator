@@ -1,7 +1,7 @@
 <div class="klasses view">
 <h2>
     <?php echo h($klass['Klass']['name']); ?>
-    <small>(<?php echo implode(', ', $code_names); ?>)</small>
+    <small>(<?php echo $code_name; ?>)</small>
 </h2>
 <div class="row">
     <div class="well col-md-4">

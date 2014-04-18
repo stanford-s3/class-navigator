@@ -23,8 +23,8 @@ class Department extends AppModel {
  * @var array
  */
 	public $hasMany = array(
-		'KlassCode' => array(
-			'className' => 'KlassCode',
+		'Klass' => array(
+			'className' => 'Klass',
 			'foreignKey' => 'department_id',
 			'dependent' => false,
 			'conditions' => '',

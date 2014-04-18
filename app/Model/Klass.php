@@ -27,7 +27,7 @@ class Klass extends AppModel {
     );
 
 
-    public $belongsTo = 'GradingStyle';
+    public $belongsTo = array('GradingStyle', 'Department');
 
 
 /**
@@ -51,8 +51,6 @@ class Klass extends AppModel {
 		)
 	);
 
-    private $Department;
-
     /**
      * Get the class code string which describes this class.
      *
@@ -60,8 +58,9 @@ class Klass extends AppModel {
      * @return array
      */
     public function getCodeName($klass) {
+        $this->Department->recursive = 0;
         $department = $this->Department->findById($klass['department_id']);
-        return $department['code'] . ' ' . $klass['code'];
+        return $department['Department']['code'] . ' ' . $klass['code'];
     }
 
     /**
@@ -71,20 +70,11 @@ class Klass extends AppModel {
      * @return array
      */
     public function searchByCode($code_query, $fields = null) {
-        // TODO
+        $search_fields = explode(' ', $code_query);
+
         $options = array(
-            'joins' => array(
-                array(
-                    'table' => 'klass_codes_index',
-                    'alias' => 'KlassCodesIndex',
-                    'type' => 'INNER',
-                    'conditions' => array(
-                        'Klass.id = KlassCodesIndex.klass_id'
-                    )
-                )
-            ),
             'conditions' => array(
-                'KlassCodesIndex.class_code LIKE' => $code_query . '%'
+                'Department.code LIKE' => '%' . $search_fields[0] . '%'
             )
         );
 
