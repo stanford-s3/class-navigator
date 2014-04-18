@@ -31,20 +31,6 @@ class Klass extends AppModel {
 
 
 /**
- * hasMany associations
- *
- * @var array
- */
-    public $hasMany = array(
-        'KlassCode' => array(
-            'className' => 'KlassCode',
-        ),
-        'KlassCodesIndex' => array(
-            'className' => 'KlassCodesIndex'
-        ),
-    );
-
-/**
  * hasAndBelongsToMany associations
  *
  * @var array
@@ -68,21 +54,14 @@ class Klass extends AppModel {
     private $Department;
 
     /**
-     * Returns an array of class codes which describe this class.
+     * Get the class code string which describes this class.
      *
+     * @param int $klass
      * @return array
      */
-    public function getCodeNames($codes) {
-        if (!isset($this->Department))
-            $this->Department = new Department();
-
-        $ret = array();
-        foreach ($codes as $code) {
-            $department = $this->Department->find('first', array('conditions' => array('Department.id' => $code['department_id'])));
-            $ret[] = $department['Department']['code'] . ' ' . $code['klass_code'];
-        }
-
-        return $ret;
+    public function getCodeName($klass) {
+        $department = $this->Department->findById($klass['department_id']);
+        return $department['code'] . ' ' . $klass['code'];
     }
 
     /**
@@ -92,6 +71,7 @@ class Klass extends AppModel {
      * @return array
      */
     public function searchByCode($code_query, $fields = null) {
+        // TODO
         $options = array(
             'joins' => array(
                 array(
